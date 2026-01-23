@@ -1,0 +1,56 @@
+:root {
+  /* Colors - Light Theme (Default) */
+  --echo-primary-color: #3B82F6;
+  --echo-primary-hover: #2563EB;
+  --echo-background: #FFFFFF;
+  --echo-surface: #F9FAFB;
+  --echo-text-primary: #111827;
+  --echo-text-secondary: #6B7280;
+  --echo-text-tertiary: #9CA3AF;
+  --echo-border: #E5E7EB;
+  --echo-error: #EF4444;
+  --echo-success: #10B981;
+  
+  /* Spacing */
+  --echo-spacing-xs: 4px;
+  --echo-spacing-sm: 8px;
+  --echo-spacing-md: 16px;
+  --echo-spacing-lg: 24px;
+  --echo-spacing-xl: 32px;
+  
+  /* Typography */
+  --echo-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --echo-font-size-xs: 12px;
+  --echo-font-size-sm: 14px;
+  --echo-font-size-md: 16px;
+  --echo-font-size-lg: 18px;
+  
+  /* Effects */
+  --echo-border-radius: 12px;
+  --echo-border-radius-sm: 8px;
+  --echo-border-radius-lg: 16px;
+  --echo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --echo-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --echo-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --echo-transition: 200ms ease-in-out;
+  
+  /* Z-index layers */
+  --echo-z-index: 9999;
+  --echo-z-index-bubble: 9999;
+  --echo-z-index-window: 10000;
+}
+
+/* Dark Theme */
+[data-echo-theme="dark"] {
+  --echo-primary-color: #60A5FA;
+  --echo-primary-hover: #3B82F6;
+  --echo-background: #111827;
+  --echo-surface: #1F2937;
+  --echo-text-primary: #F9FAFB;
+  --echo-text-secondary: #9CA3AF;
+  --echo-text-tertiary: #6B7280;
+  --echo-border: #374151;
+  --echo-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --echo-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.4);
+  --echo-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.5);
+}
