@@ -32,4 +32,4 @@ jobs:
           echo "//registry.npmjs.org/:_authToken=${{ secrets.ECHOSDK_GITHUB_ACTIONS }}" >> ~/.npmrc
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish --access public --verbose
