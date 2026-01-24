@@ -1,4 +1,4 @@
-# Vite Example - @echosdk/react
+# Vite Example - echosdk
 
 A simple Vite + React + TypeScript example demonstrating how to integrate the EchoSDK chat component.
 
@@ -22,8 +22,8 @@ npm run dev
 The main integration is in `src/App.tsx`:
 
 ```tsx
-import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import { EchoChat } from 'echosdk';
+import 'echosdk/styles';
 
 function App() {
   return (

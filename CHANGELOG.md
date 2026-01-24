@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-01-23
 
 ### Added
-- Initial release of @echosdk/react
+- Initial release of echosdk
 - Core `EchoChat` component with full customization
 - `useChat` hook for state management with localStorage persistence
 - `useTheme` hook for automatic theme detection

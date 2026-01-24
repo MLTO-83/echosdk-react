@@ -1,5 +1,5 @@
 {
-  "name": "@echosdk/react",
+  "name": "echosdk",
   "version": "1.0.0",
   "description": "Headless React SDK for EchoSDK support infrastructure",
   "main": "./dist/index.cjs",

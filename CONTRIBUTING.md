@@ -1,4 +1,4 @@
-# Contributing to @echosdk/react
+# Contributing to echosdk
 
 Thank you for your interest in contributing to EchoSDK! This document provides guidelines for contributing to the project.
 

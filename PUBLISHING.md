@@ -1,4 +1,4 @@
-# Publishing @echosdk/react to npm
+# Publishing echosdk to npm
 
 This guide walks through publishing the SDK to npm.
 
@@ -11,7 +11,7 @@ This guide walks through publishing the SDK to npm.
 2. **npm Organization** (Optional but Recommended)
    - Create organization: `@echosdk`
    - URL: `https://www.npmjs.com/org/create`
-   - This allows publishing as `@echosdk/react`
+   - This allows publishing as `echosdk`
 
 3. **npm Access Token**
    - Go to [npmjs.com/settings/tokens](https://www.npmjs.com/settings/YOUR_USERNAME/tokens)
@@ -53,7 +53,7 @@ Add your npm token to GitHub repository secrets:
      - Publish to npm
 
 4. **Verify**
-   - Check: `https://www.npmjs.com/package/@echosdk/react`
+   - Check: `https://www.npmjs.com/package/echosdk`
 
 ### Method 2: Manual Publish
 
@@ -72,7 +72,7 @@ npm pack
 npm publish --access public
 
 # 5. Verify
-npm view @echosdk/react
+npm view echosdk
 ```
 
 ## Pre-Publish Checklist
@@ -103,7 +103,7 @@ npm view @echosdk/react
    - Share on Discord/Slack communities
 
 3. **Monitor**
-   - Check npm downloads: `https://npm-stat.com/charts.html?package=@echosdk/react`
+   - Check npm downloads: `https://npm-stat.com/charts.html?package=echosdk`
    - Watch GitHub issues
    - Respond to community feedback
 

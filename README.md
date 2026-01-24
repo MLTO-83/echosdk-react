@@ -1,8 +1,8 @@
-# @echosdk/react
+# echosdk
 
 A lightweight, headless React SDK for embedding AI-powered support chat into your applications.
 
-[![npm version](https://badge.fury.io/js/%40echosdk%2Freact.svg)](https://www.npmjs.com/package/@echosdk/react)
+[![npm version](https://badge.fury.io/js/%40echosdk%2Freact.svg)](https://www.npmjs.com/package/echosdk)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Features
@@ -19,20 +19,20 @@ A lightweight, headless React SDK for embedding AI-powered support chat into you
 ## Installation
 
 ```bash
-npm install @echosdk/react
+npm install echosdk
 ```
 
 or
 
 ```bash
-yarn add @echosdk/react
+yarn add echosdk
 ```
 
 ## Quick Start
 
 ```tsx
-import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import { EchoChat } from 'echosdk';
+import 'echosdk/styles';
 
 function App() {
   return (
@@ -96,7 +96,7 @@ Customize the appearance using CSS variables:
 ### Using Hooks
 
 ```tsx
-import { useChat } from '@echosdk/react';
+import { useChat } from 'echosdk';
 
 function CustomChat() {
   const [state, actions] = useChat('your-app-id');
@@ -129,7 +129,7 @@ function CustomChat() {
 Full TypeScript support with exported types:
 
 ```tsx
-import type { Message, ChatState, EchoChatProps } from '@echosdk/react';
+import type { Message, ChatState, EchoChatProps } from 'echosdk';
 ```
 
 ## Browser Support

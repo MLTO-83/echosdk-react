@@ -1,4 +1,4 @@
-# Next.js Example - @echosdk/react
+# Next.js Example - echosdk
 
 A Next.js 15 + App Router + TypeScript example demonstrating SSR-compatible integration of the EchoSDK chat component.
 
@@ -31,8 +31,8 @@ Since EchoChat uses browser APIs (localStorage, window), it must be used in a Cl
 // app/components/EchoChatClient.tsx
 'use client';
 
-import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import { EchoChat } from 'echosdk';
+import 'echosdk/styles';
 
 export default function EchoChatClient() {
   return <EchoChat appId="your-app-id" />;
