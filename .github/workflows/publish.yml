@@ -26,10 +26,12 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Configure npm authentication
-        run: |
-          echo "@echosdk:registry=https://registry.npmjs.org/" > ~/.npmrc
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.ECHOSDK_GITHUB_ACTIONS }}" >> ~/.npmrc
+      - name: Check npm authentication
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ECHOSDK_GITHUB_ACTIONS }}
 
       - name: Publish to npm
         run: npm publish --access public --verbose
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ECHOSDK_GITHUB_ACTIONS }}
