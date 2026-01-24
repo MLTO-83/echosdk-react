@@ -50,12 +50,12 @@ describe('EchoChat', () => {
     });
 
     it('applies custom theme', () => {
-        const { container } = render(
+        render(
             <EchoChat appId="test-app" theme="dark" />
         );
 
-        const chatContainer = container.querySelector('.echo-chat-container');
-        expect(chatContainer).toHaveAttribute('data-echo-theme', 'dark');
+        // Theme is applied to document.documentElement on initial render
+        expect(document.documentElement).toHaveAttribute('data-echo-theme', 'dark');
     });
 
     it('calls onError callback on error', () => {

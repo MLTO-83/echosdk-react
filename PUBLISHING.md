@@ -83,9 +83,9 @@ npm view @echosdk/react
 - [x] Build succeeds (`npm run build`)
 - [x] Tests pass (`npm test`)
 - [x] Examples work
-- [ ] NPM_TOKEN added to GitHub Secrets
-- [ ] Git tag created
-- [ ] GitHub release created
+- [x] NPM_TOKEN added to GitHub Secrets
+- [x] Git tag created
+- [ ] GitHub release created - **NEXT STEP**
 
 ## Post-Publish
 
