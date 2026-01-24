@@ -1,7 +1,7 @@
 type EventName = 'chat_opened' | 'chat_closed' | 'message_sent' | 'error_occurred';
 
 interface EventData {
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 export const trackEvent = (eventName: EventName, data?: EventData): void => {

@@ -10,14 +10,14 @@ export interface Message {
     text: string;
     sender: 'user' | 'ai' | 'system';
     timestamp: number;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }
 
 export interface Context {
     conversationId?: string;
     userName?: string;
     userEmail?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
 }
 
 export interface QueryResponse {
@@ -35,7 +35,7 @@ export interface Source {
 export interface ApiError {
     code: string;
     message: string;
-    details?: any;
+    details?: unknown;
 }
 
 // Component Props
@@ -50,7 +50,7 @@ export interface EchoChatProps {
     avatar?: string;
     userName?: string;
     userEmail?: string;
-    metadata?: Record<string, any>;
+    metadata?: Record<string, unknown>;
     onMessage?: (message: Message) => void;
     onError?: (error: Error) => void;
     className?: string;

@@ -1,8 +1,10 @@
+import type { Message } from '../types';
+
 const STORAGE_KEY = 'echosdk_conversation';
 
 export interface StoredConversation {
     conversationId: string;
-    messages: any[];
+    messages: Message[];
     lastUpdated: number;
 }
 

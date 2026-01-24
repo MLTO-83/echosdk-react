@@ -7,6 +7,7 @@ interface ChatWindowProps {
     actions: ChatActions;
     position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     greeting?: string;
+    placeholder?: string;
 }
 
 export function ChatWindow({
@@ -14,6 +15,7 @@ export function ChatWindow({
     actions,
     position = 'bottom-right',
     greeting = 'Chat with us',
+    placeholder = 'Type your message...',
 }: ChatWindowProps) {
     if (!state.isOpen) return null;
 
@@ -49,7 +51,7 @@ export function ChatWindow({
             <MessageInput
                 onSend={actions.sendMessage}
                 disabled={state.isLoading}
-                placeholder="Type your message..."
+                placeholder={placeholder}
             />
 
             <div className="echo-chat-footer">

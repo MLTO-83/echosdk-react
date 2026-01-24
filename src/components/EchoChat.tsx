@@ -13,9 +13,8 @@ export function EchoChat({
     theme = 'auto',
     position = 'bottom-right',
     primaryColor,
-    placeholder: _placeholder,
+    placeholder = 'Type your message...',
     greeting = 'Chat with us',
-    avatar: _avatar,
     userName,
     userEmail,
     metadata,
@@ -76,6 +75,7 @@ export function EchoChat({
                     actions={actions}
                     position={position}
                     greeting={greeting}
+                    placeholder={placeholder}
                 />
             </div>
         </ErrorBoundary>

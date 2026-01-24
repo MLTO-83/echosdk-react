@@ -68,11 +68,11 @@ export class EchoSDKClient {
         return headers;
     }
 
-    private async fetchWithRetry(
+    private async fetchWithRetry<T = unknown>(
         endpoint: string,
         options: RequestInit,
         attempt = 1
-    ): Promise<any> {
+    ): Promise<T> {
         try {
             const response = await fetch(`${this.apiUrl}${endpoint}`, options);
 
