@@ -31,8 +31,8 @@ Since EchoChat uses browser APIs (localStorage, window), it must be used in a Cl
 // app/components/EchoChatClient.tsx
 'use client';
 
-import { EchoChat } from 'echosdk';
-import 'echosdk/styles';
+import { EchoChat } from '@echosdk/react';
+import '@echosdk/react/styles';
 
 export default function EchoChatClient() {
   return <EchoChat appId="your-app-id" />;

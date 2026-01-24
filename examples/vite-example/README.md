@@ -22,8 +22,8 @@ npm run dev
 The main integration is in `src/App.tsx`:
 
 ```tsx
-import { EchoChat } from 'echosdk';
-import 'echosdk/styles';
+import { EchoChat } from '@echosdk/react';
+import '@echosdk/react/styles';
 
 function App() {
   return (
