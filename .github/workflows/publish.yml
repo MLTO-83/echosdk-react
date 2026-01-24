@@ -28,8 +28,8 @@ jobs:
 
       - name: Configure npm authentication
         run: |
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.ECHOSDK_GITHUB_ACTIONS }}" > ~/.npmrc
-          echo "registry=https://registry.npmjs.org/" >> ~/.npmrc
+          echo "@echosdk:registry=https://registry.npmjs.org/" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.ECHOSDK_GITHUB_ACTIONS }}" >> ~/.npmrc
 
       - name: Publish to npm
         run: npm publish --access public
