@@ -1,0 +1,31 @@
+name: Debug npm Auth
+on: 
+  workflow_dispatch:
+
+jobs:
+  debug-auth:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+
+      - name: Configure .npmrc
+        run: |
+          echo "@echosdk:registry=https://registry.npmjs.org/" > ~/.npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.ECHOSDK_GITHUB_ACTIONS }}" >> ~/.npmrc
+
+      - name: 1. Verify Token Validity (npm whoami)
+        run: |
+          echo "Attempting to authenticate..."
+          npm whoami --registry https://registry.npmjs.org/ || echo "❌ AUTHENTICATION FAILED: Token is unreachable or invalid"
+
+      - name: 2. Verify Organization Access
+        continue-on-error: true
+        run: |
+          echo "Checking access to @echosdk..."
+          # List packages in the org to verify read/membership access
+          npm access ls-packages @echosdk || echo "❌ ACCESS FAILED: Token cannot access @echosdk organization"
