@@ -84,7 +84,9 @@ export class EchoSDKClient {
 
                 // Don't retry client errors (4xx)
                 if (response.status >= 400 && response.status < 500) {
-                    throw new Error(error.message || `HTTP ${response.status}`);
+                    const clientError = new Error(error.message || `HTTP ${response.status}`);
+                    Object.assign(clientError, { shouldRetry: false });
+                    throw clientError;
                 }
 
                 throw error;
@@ -92,6 +94,11 @@ export class EchoSDKClient {
 
             return await response.json();
         } catch (error) {
+            // Don't retry if explicitly marked
+            if ((error as { shouldRetry?: boolean }).shouldRetry === false) {
+                throw error;
+            }
+
             // Retry on network errors or 5xx errors
             if (attempt < this.retryAttempts) {
                 await this.delay(this.retryDelay * attempt);
