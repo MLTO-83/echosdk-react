@@ -13,7 +13,7 @@ export class EchoSDKClient {
     private retryDelay = 1000;
 
     constructor(config: ClientConfig) {
-        this.apiUrl = config.apiUrl || 'https://api.echosdk.com';
+        this.apiUrl = config.baseUrl || config.apiUrl || 'https://api.echosdk.com';
         this.appId = config.appId;
         this.apiKey = config.apiKey;
     }

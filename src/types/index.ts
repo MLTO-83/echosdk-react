@@ -2,6 +2,7 @@
 export interface ClientConfig {
     appId: string;
     apiUrl?: string;
+    baseUrl?: string;
     apiKey?: string;
 }
 
@@ -42,6 +43,7 @@ export interface ApiError {
 export interface EchoChatProps {
     appId: string;
     apiUrl?: string;
+    baseUrl?: string;
     theme?: 'light' | 'dark' | 'auto';
     position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
     primaryColor?: string;
