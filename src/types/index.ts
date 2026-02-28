@@ -1,8 +1,29 @@
 // API Types
 export interface ClientConfig {
+    /**
+     * Your EchoSDK application ID. This is a **public** identifier and is safe
+     * to ship in client-side code and `NEXT_PUBLIC_` environment variables.
+     *
+     * @example
+     * // Next.js: NEXT_PUBLIC_ECHOSDK_APP_ID=your-app-id
+     * appId: process.env.NEXT_PUBLIC_ECHOSDK_APP_ID!
+     */
     appId: string;
     apiUrl?: string;
     baseUrl?: string;
+    /**
+     * Optional secret API key for **server-side use only**. When provided it is
+     * sent as a `Bearer` token in the `Authorization` header.
+     *
+     * ⚠️  Never place this value in a `NEXT_PUBLIC_` variable or any client-side
+     * bundle — treat it like a password.  Use it only in server-side contexts
+     * (e.g. a Next.js Route Handler that proxies requests to EchoSDK).
+     *
+     * @example
+     * // .env.local (server-only, never exposed to the browser)
+     * // ECHOSDK_API_KEY=sk-...
+     * apiKey: process.env.ECHOSDK_API_KEY  // no NEXT_PUBLIC_ prefix
+     */
     apiKey?: string;
 }
 

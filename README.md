@@ -52,11 +52,55 @@ or
 yarn add @echosdk/react
 ```
 
-## Quick Start
+## Getting Started
+
+The fastest way to connect your app to EchoSDK is with the CLI:
+
+```bash
+# 1. Authenticate once — opens a browser window
+npx echosdk login
+
+# 2. Link or create a Chat App in your project directory
+npx echosdk init
+```
+
+`init` will:
+- Show your existing Chat Apps (or prompt you to create one)
+- Write `echo.config.json` with the correct `appId`
+- Automatically append `NEXT_PUBLIC_ECHOSDK_APP_ID` to `.env.local` if the file exists
+
+Then install the SDK and drop in the component:
+
+```bash
+npm install @echosdk/react
+```
 
 ```tsx
 import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
+
+// appId comes from echo.config.json / NEXT_PUBLIC_ECHOSDK_APP_ID
+<EchoChat appId="your-app-id" />
+```
+
+Other CLI commands:
+
+| Command | Description |
+|---|---|
+| `npx echosdk login` | Authenticate via browser (one-time) |
+| `npx echosdk init` | Generate `echo.config.json` for this project |
+| `npx echosdk whoami` | Show the logged-in account |
+| `npx echosdk logout` | Remove stored credentials |
+
+---
+
+## Quick Start (manual)
+
+If you already have an `appId` from the EchoSDK dashboard:
+
+```tsx
+import { EchoChat } from '@echosdk/react';
+import '@echosdk/react/dist/style.css';
 
 function App() {
   return (
@@ -84,6 +128,52 @@ function App() {
 | `metadata` | `object` | - | Additional context data |
 | `onMessage` | `(message: Message) => void` | - | Message callback |
 | `onError` | `(error: Error) => void` | - | Error callback |
+
+## Security
+
+### `appId` — public identifier, safe for client-side use
+
+`appId` is a **public** application identifier, not a secret credential. It is safe to
+hardcode or expose via a `NEXT_PUBLIC_` environment variable in Next.js:
+
+```env
+# .env.local
+NEXT_PUBLIC_ECHOSDK_APP_ID=your-app-id
+```
+
+```tsx
+<EchoChat appId={process.env.NEXT_PUBLIC_ECHOSDK_APP_ID!} />
+```
+
+### `apiKey` — secret credential, server-side only
+
+`EchoSDKClient` accepts an optional `apiKey` that, when provided, is sent as a `Bearer`
+token in the `Authorization` header. This is a real secret.
+
+> **Never** place `apiKey` in a `NEXT_PUBLIC_` variable or any client-side bundle.
+
+Use it only in server-side contexts (e.g. a Next.js Route Handler that proxies chat
+requests), with a server-only environment variable:
+
+```env
+# .env.local — never exposed to the browser
+ECHOSDK_API_KEY=sk-...
+```
+
+```ts
+// app/api/echo/route.ts — server-side only
+import { EchoSDKClient } from '@echosdk/react';
+
+const client = new EchoSDKClient({
+  appId: process.env.NEXT_PUBLIC_ECHOSDK_APP_ID!,  // public — NEXT_PUBLIC_ is fine
+  apiKey: process.env.ECHOSDK_API_KEY,              // secret — no NEXT_PUBLIC_ prefix
+});
+```
+
+| Credential | What it is | Safe in client bundle? | Recommended env var |
+|---|---|---|---|
+| `appId` | Public app identifier | ✅ Yes | `NEXT_PUBLIC_ECHOSDK_APP_ID` |
+| `apiKey` | Secret Bearer token | ❌ No | `ECHOSDK_API_KEY` |
 
 ## Theming
 

@@ -1,5 +1,5 @@
 import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
 import './App.css';
 
 function App() {
@@ -47,7 +47,7 @@ function App() {
         <section className="code-example">
           <h3>Usage Example</h3>
           <pre><code>{`import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
 
 function App() {
   return (

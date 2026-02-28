@@ -23,7 +23,7 @@ The main integration is in `src/App.tsx`:
 
 ```tsx
 import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
 
 function App() {
   return (

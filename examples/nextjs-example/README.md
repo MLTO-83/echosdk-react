@@ -32,7 +32,7 @@ Since EchoChat uses browser APIs (localStorage, window), it must be used in a Cl
 'use client';
 
 import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
 
 export default function EchoChatClient() {
   return <EchoChat appId="your-app-id" />;

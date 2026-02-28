@@ -1,7 +1,7 @@
 'use client';
 
 import { EchoChat } from '@echosdk/react';
-import '@echosdk/react/styles';
+import '@echosdk/react/dist/style.css';
 
 export default function EchoChatClient() {
     return (
