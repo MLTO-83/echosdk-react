@@ -3,6 +3,20 @@ name: Post to X on Release
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag (e.g. v1.1.2)'
+        required: true
+      release_name:
+        description: 'Release name'
+        required: true
+      release_url:
+        description: 'Release URL'
+        required: true
+      release_body:
+        description: 'Release notes body'
+        required: false
 
 jobs:
   tweet:
@@ -25,8 +39,8 @@ jobs:
           X_API_SECRET: ${{ secrets.X_API_SECRET }}
           X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
           X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          RELEASE_NAME: ${{ github.event.release.name }}
-          RELEASE_URL: ${{ github.event.release.html_url }}
-          RELEASE_BODY: ${{ github.event.release.body }}
+          RELEASE_TAG: ${{ github.event.release.tag_name || inputs.release_tag }}
+          RELEASE_NAME: ${{ github.event.release.name || inputs.release_name }}
+          RELEASE_URL: ${{ github.event.release.html_url || inputs.release_url }}
+          RELEASE_BODY: ${{ github.event.release.body || inputs.release_body }}
         run: python .github/scripts/tweet_release.py
