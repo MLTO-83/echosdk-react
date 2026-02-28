@@ -50,7 +50,7 @@ describe('Storage Utils Error Handling', () => {
         saveConversation({ conversationId: 'id', messages: [], lastUpdated: Date.now() });
 
         expect(warnSpy).toHaveBeenCalledWith(
-            'Failed to save conversation to localStorage:', expect.any(Error)
+            '[EchoSDK]', 'Failed to save conversation to localStorage:', expect.any(Error)
         );
     });
 
@@ -61,7 +61,7 @@ describe('Storage Utils Error Handling', () => {
         loadConversation();
 
         expect(warnSpy).toHaveBeenCalledWith(
-            'Failed to load conversation from localStorage:', expect.any(Error)
+            '[EchoSDK]', 'Failed to load conversation from localStorage:', expect.any(Error)
         );
     });
 
@@ -72,7 +72,7 @@ describe('Storage Utils Error Handling', () => {
         clearConversation();
 
         expect(warnSpy).toHaveBeenCalledWith(
-            'Failed to clear conversation from localStorage:', expect.any(Error)
+            '[EchoSDK]', 'Failed to clear conversation from localStorage:', expect.any(Error)
         );
     });
 });

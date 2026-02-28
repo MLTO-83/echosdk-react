@@ -1,4 +1,5 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
+import { logger } from '../utils/logger';
 
 interface Props {
     children: ReactNode;
@@ -21,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
     }
 
     componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-        console.error('EchoSDK Error:', error, errorInfo);
+        logger.error('Unhandled error:', error, errorInfo);
         this.props.onError?.(error, errorInfo);
     }
 

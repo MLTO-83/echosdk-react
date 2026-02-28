@@ -48,8 +48,13 @@ export async function loginCommand(): Promise<void> {
     try {
       result = await pollForToken(device_code, pollInterval);
     } catch (err) {
-      poll.fail('Authentication error.');
-      console.error(chalk.red(`\n  ${(err as Error).message}\n`));
+      if (err instanceof TypeError) {
+        poll.fail('Network error — could not reach the EchoSDK auth service.');
+        console.error(chalk.red('\n  Check your connection and try again.\n'));
+      } else {
+        poll.fail('Authentication error.');
+        console.error(chalk.red(`\n  ${(err as Error).message}\n`));
+      }
       process.exit(1);
     }
 
@@ -78,6 +83,11 @@ export async function loginCommand(): Promise<void> {
 
       case 'denied':
         poll.fail('Access denied. Please try again.');
+        process.exit(1);
+        break;
+
+      case 'expired':
+        poll.fail('Login timed out. Please run npx echosdk login again.');
         process.exit(1);
         break;
 

@@ -8,6 +8,7 @@ import {
 } from '../utils/storage';
 import { validateMessage, sanitizeMessage } from '../utils/validators';
 import { trackEvent } from '../utils/analytics';
+import { logger } from '../utils/logger';
 
 export function useChat(
     appId: string,
@@ -78,6 +79,7 @@ export function useChat(
             } catch (err) {
                 const error = err instanceof Error ? err : new Error('Unknown error');
                 setError(error);
+                logger.error('sendMessage failed:', error.message);
                 trackEvent('error_occurred', { error: error.message });
 
                 // Remove optimistic message on error

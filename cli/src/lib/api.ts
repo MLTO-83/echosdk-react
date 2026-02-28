@@ -26,7 +26,8 @@ export type PollResult =
   | { status: 'authorized'; access_token: string; email?: string; expires_in?: number }
   | { status: 'pending' }
   | { status: 'slow_down'; newInterval: number }
-  | { status: 'denied' };
+  | { status: 'denied' }
+  | { status: 'expired' };
 
 /**
  * Polls the token endpoint once. Returns the result type; the caller is
@@ -67,6 +68,8 @@ export async function pollForToken(
       return { status: 'slow_down', newInterval: currentInterval + 5 };
     case 'access_denied':
       return { status: 'denied' };
+    case 'expired_token':
+      return { status: 'expired' };
     default:
       throw new Error(err.error ?? `HTTP ${res.status}`);
   }
@@ -92,7 +95,7 @@ export async function createApp(name: string): Promise<App> {
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${API_BASE}${path}`, { headers: authHeaders() });
-  return handleResponse<T>(res);
+  return handleResponse<T>(res, 'GET', path);
 }
 
 async function post<T>(path: string, body: unknown, auth = true): Promise<T> {
@@ -104,7 +107,7 @@ async function post<T>(path: string, body: unknown, auth = true): Promise<T> {
     },
     body: JSON.stringify(body),
   });
-  return handleResponse<T>(res);
+  return handleResponse<T>(res, 'POST', path);
 }
 
 function authHeaders(): Record<string, string> {
@@ -112,10 +115,10 @@ function authHeaders(): Record<string, string> {
   return creds ? { Authorization: `Bearer ${creds.token}` } : {};
 }
 
-async function handleResponse<T>(res: Response): Promise<T> {
+async function handleResponse<T>(res: Response, method: string, path: string): Promise<T> {
   if (res.ok) return res.json() as Promise<T>;
   const err = (await res.json().catch(() => ({ message: res.statusText }))) as {
     message?: string;
   };
-  throw new Error(err.message ?? `HTTP ${res.status}`);
+  throw new Error(`${method} ${path} — ${err.message ?? `HTTP ${res.status}`}`);
 }

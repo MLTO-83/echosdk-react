@@ -4,6 +4,7 @@ import type {
     Context,
     ApiError,
 } from '../types';
+import { logger } from '../utils/logger';
 
 export class EchoSDKClient {
     private apiUrl: string;
@@ -86,13 +87,15 @@ export class EchoSDKClient {
                 if (response.status >= 400 && response.status < 500) {
                     const clientError = new Error(error.message || `HTTP ${response.status}`);
                     Object.assign(clientError, { shouldRetry: false });
+                    logger.error(`Client error ${response.status} on ${endpoint}:`, error.message || error);
                     throw clientError;
                 }
 
                 throw error;
             }
 
-            return await response.json();
+            const data = response.status === 204 ? ({} as T) : await response.json() as T;
+            return data;
         } catch (error) {
             // Don't retry if explicitly marked
             if ((error as { shouldRetry?: boolean }).shouldRetry === false) {
@@ -101,10 +104,12 @@ export class EchoSDKClient {
 
             // Retry on network errors or 5xx errors
             if (attempt < this.retryAttempts) {
+                logger.warn(`Request to ${endpoint} failed (attempt ${attempt}/${this.retryAttempts}), retrying…`);
                 await this.delay(this.retryDelay * attempt);
                 return this.fetchWithRetry(endpoint, options, attempt + 1);
             }
 
+            logger.error(`Request to ${endpoint} failed after ${this.retryAttempts} attempts:`, error);
             throw error;
         }
     }

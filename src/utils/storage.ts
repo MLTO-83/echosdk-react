@@ -1,4 +1,5 @@
 import type { Message } from '../types';
+import { logger } from './logger';
 
 const STORAGE_KEY = 'echosdk_conversation';
 
@@ -12,7 +13,7 @@ export const saveConversation = (data: StoredConversation): void => {
     try {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     } catch (error) {
-        console.warn('Failed to save conversation to localStorage:', error);
+        logger.warn('Failed to save conversation to localStorage:', error);
     }
 };
 
@@ -21,7 +22,7 @@ export const loadConversation = (): StoredConversation | null => {
         const data = localStorage.getItem(STORAGE_KEY);
         return data ? JSON.parse(data) : null;
     } catch (error) {
-        console.warn('Failed to load conversation from localStorage:', error);
+        logger.warn('Failed to load conversation from localStorage:', error);
         return null;
     }
 };
@@ -30,6 +31,6 @@ export const clearConversation = (): void => {
     try {
         localStorage.removeItem(STORAGE_KEY);
     } catch (error) {
-        console.warn('Failed to clear conversation from localStorage:', error);
+        logger.warn('Failed to clear conversation from localStorage:', error);
     }
 };
