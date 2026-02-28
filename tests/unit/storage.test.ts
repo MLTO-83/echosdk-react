@@ -1,5 +1,42 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { saveConversation, loadConversation, clearConversation, StoredConversation } from '../../src/utils/storage';
+import { describe, it, expect, vi, afterEach, beforeEach } from 'vitest';
+import { saveConversation, loadConversation, clearConversation } from '../../src/utils/storage';
+import type { StoredConversation } from '../../src/utils/storage';
+
+const STORAGE_KEY = 'echosdk_conversation';
+
+describe('Storage Utils', () => {
+    beforeEach(() => {
+        localStorage.clear();
+    });
+
+    afterEach(() => {
+        vi.restoreAllMocks();
+        localStorage.clear();
+    });
+
+    it('saveConversation persists data and loadConversation retrieves it', () => {
+        const data: StoredConversation = {
+            conversationId: 'conv_123',
+            messages: [{ id: 'm1', text: 'hi', sender: 'user', timestamp: 1 }],
+            lastUpdated: Date.now(),
+        };
+
+        saveConversation(data);
+        const loaded = loadConversation();
+
+        expect(loaded).toEqual(data);
+    });
+
+    it('loadConversation returns null when nothing is stored', () => {
+        expect(loadConversation()).toBeNull();
+    });
+
+    it('clearConversation removes the stored conversation', () => {
+        saveConversation({ conversationId: 'c1', messages: [], lastUpdated: 0 });
+        clearConversation();
+        expect(localStorage.getItem(STORAGE_KEY)).toBeNull();
+    });
+});
 
 describe('Storage Utils Error Handling', () => {
     afterEach(() => {

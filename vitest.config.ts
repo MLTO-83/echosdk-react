@@ -16,6 +16,12 @@ export default defineConfig({
                 'examples/',
                 'dist/',
                 '*.config.ts',
+                // CLI is a separate npm package with its own test suite
+                'cli/**',
+                // Config files — not application source
+                '**/.eslintrc.cjs',
+                // Pure re-export barrel; all individual modules are tested directly
+                'src/index.ts',
             ],
             thresholds: {
                 lines: 80,

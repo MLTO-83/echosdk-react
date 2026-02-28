@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { EchoChat } from '../../src/components/EchoChat';
+import { EchoSDKClient } from '../../src/api/client';
 
 // Mock the API client
 vi.mock('../../src/api/client', () => ({
@@ -66,5 +67,53 @@ describe('EchoChat', () => {
 
         // For now, just verify the prop is accepted
         expect(onError).toBeDefined();
+    });
+
+    it('calls onMessage when a new message is received', async () => {
+        const onMessage = vi.fn();
+
+        render(<EchoChat appId="test-app" onMessage={onMessage} />);
+
+        // Open the chat
+        fireEvent.click(screen.getByRole('button', { name: /open chat/i }));
+
+        // Type and submit a message
+        const input = screen.getByRole('textbox', { name: /message input/i });
+        fireEvent.change(input, { target: { value: 'Hello' } });
+        fireEvent.click(screen.getByRole('button', { name: /send message/i }));
+
+        // Wait for the API mock to resolve and onMessage to be called
+        await waitFor(() => {
+            expect(onMessage).toHaveBeenCalled();
+        });
+    });
+
+    it('fires onError callback when the API call fails', async () => {
+        // Override the module-level mock for this one test only
+        vi.mocked(EchoSDKClient).mockImplementationOnce(() => ({
+            query: vi.fn().mockRejectedValue(new Error('API failure')),
+            sendFeedback: vi.fn(),
+            requestHumanHandover: vi.fn(),
+        }));
+
+        const onError = vi.fn();
+        render(<EchoChat appId="test-app" onError={onError} />);
+
+        // Open the chat and trigger a failing send
+        fireEvent.click(screen.getByRole('button', { name: /open chat/i }));
+        const input = screen.getByRole('textbox', { name: /message input/i });
+        fireEvent.change(input, { target: { value: 'Hello' } });
+        fireEvent.click(screen.getByRole('button', { name: /send message/i }));
+
+        await waitFor(() => {
+            expect(onError).toHaveBeenCalledWith(expect.objectContaining({ message: 'API failure' }));
+        });
+    });
+
+    it('applies primaryColor as a CSS custom property on the container', () => {
+        render(<EchoChat appId="test-app" primaryColor="#FF5500" />);
+
+        const container = document.querySelector('.echo-chat-container') as HTMLElement;
+        expect(container.style.getPropertyValue('--echo-primary-color')).toBe('#FF5500');
     });
 });
