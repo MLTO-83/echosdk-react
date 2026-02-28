@@ -2,10 +2,10 @@ import os
 import sys
 import tweepy
 
-API_KEY = os.environ["X_API_KEY"]
-API_SECRET = os.environ["X_API_SECRET"]
+API_KEY = os.environ["X_CONSUMER_KEY"]
+API_SECRET = os.environ["X_CONSUMER_SECRET"]
 ACCESS_TOKEN = os.environ["X_ACCESS_TOKEN"]
-ACCESS_SECRET = os.environ["X_ACCESS_SECRET"]
+ACCESS_SECRET = os.environ["X_ACCESS_TOKEN_SECRET"]
 
 release_tag = os.environ.get("RELEASE_TAG", "")
 release_name = os.environ.get("RELEASE_NAME", release_tag)
