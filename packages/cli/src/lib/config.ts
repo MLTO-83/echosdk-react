@@ -1,6 +1,46 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 
+/**
+ * Returns the first existing path among the given candidates, or null.
+ */
+export function findFile(dir: string, candidates: string[]): string | null {
+  for (const name of candidates) {
+    const full = join(resolve(dir), name);
+    if (existsSync(full)) return full;
+  }
+  return null;
+}
+
+/**
+ * Appends or updates `key=value` in the given env file (e.g. .env or .env.local).
+ * Creates the file if it doesn't exist.
+ *
+ * Returns the path written.
+ */
+export function upsertEnvFile(
+  dir: string,
+  envFilename: string,
+  key: string,
+  value: string,
+): string {
+  const envPath = join(resolve(dir), envFilename);
+  const line = `${key}=${value}`;
+
+  let contents = existsSync(envPath) ? readFileSync(envPath, 'utf-8') : '';
+
+  const re = new RegExp(`^${key}=.*$`, 'm');
+  if (re.test(contents)) {
+    contents = contents.replace(re, line);
+  } else {
+    if (contents.length > 0 && !contents.endsWith('\n')) contents += '\n';
+    contents += `${line}\n`;
+  }
+
+  writeFileSync(envPath, contents);
+  return envPath;
+}
+
 export interface EchoConfig {
   appId: string;
   baseUrl?: string;

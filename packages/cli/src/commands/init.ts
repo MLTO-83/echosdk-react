@@ -7,18 +7,57 @@ import ora from 'ora';
 import { createApp, listApps, type App } from '../lib/api.js';
 import { requireAuth } from '../lib/auth.js';
 import {
+  findFile,
   readProjectConfig,
+  upsertEnvFile,
   upsertEnvLocal,
   writeProjectConfig,
 } from '../lib/config.js';
 
 const CREATE_NEW = '__create_new__';
 
-export async function initCommand(options: { dir: string }): Promise<void> {
+export interface InitOptions {
+  dir: string;
+  hydrogen?: boolean;
+  nextjsCommerce?: boolean;
+}
+
+export async function initCommand(options: InitOptions): Promise<void> {
   const targetDir = resolve(options.dir);
   console.log(chalk.bold('\n  EchoSDK · Init\n'));
 
   requireAuth(); // exits with message if not logged in or session expired
+
+  // Detect framework when flags are provided
+  if (options.hydrogen) {
+    const hydrogenConfig = findFile(targetDir, ['hydrogen.config.ts', 'hydrogen.config.js']);
+    if (!hydrogenConfig) {
+      console.log(
+        chalk.yellow(
+          '  ⚠  hydrogen.config.ts not found in this directory. Continuing anyway…\n',
+        ),
+      );
+    } else {
+      console.log(
+        `  ${chalk.green('✔')} Detected Shopify Hydrogen project (${chalk.dim(hydrogenConfig)})\n`,
+      );
+    }
+  }
+
+  if (options.nextjsCommerce) {
+    const nextConfig = findFile(targetDir, ['next.config.ts', 'next.config.js', 'next.config.mjs']);
+    if (!nextConfig) {
+      console.log(
+        chalk.yellow(
+          '  ⚠  next.config.js/ts not found in this directory. Continuing anyway…\n',
+        ),
+      );
+    } else {
+      console.log(
+        `  ${chalk.green('✔')} Detected Next.js Commerce project (${chalk.dim(nextConfig)})\n`,
+      );
+    }
+  }
 
   // Guard: prompt before overwriting an existing config
   const existing = readProjectConfig(targetDir);
@@ -75,7 +114,38 @@ export async function initCommand(options: { dir: string }): Promise<void> {
   );
   console.log(`    appId: ${chalk.cyan(selectedApp.id)}`);
 
-  // Auto-append to .env.local if it already exists in the target directory
+  // Hydrogen: write ECHOSDK_APP_ID to .env
+  if (options.hydrogen) {
+    const envPath = upsertEnvFile(targetDir, '.env', 'ECHOSDK_APP_ID', selectedApp.id);
+    console.log(
+      `  ${chalk.green('✔')} ${chalk.bold('.env')} updated`,
+    );
+    console.log(
+      `    ${chalk.dim('ECHOSDK_APP_ID')}=${chalk.cyan(selectedApp.id)}`,
+    );
+    printHydrogenNextSteps(selectedApp.id, envPath);
+    return;
+  }
+
+  // Next.js Commerce: write NEXT_PUBLIC_ECHOSDK_APP_ID to .env.local
+  if (options.nextjsCommerce) {
+    const envPath = upsertEnvFile(
+      targetDir,
+      '.env.local',
+      'NEXT_PUBLIC_ECHOSDK_APP_ID',
+      selectedApp.id,
+    );
+    console.log(
+      `  ${chalk.green('✔')} ${chalk.bold('.env.local')} updated`,
+    );
+    console.log(
+      `    ${chalk.dim('NEXT_PUBLIC_ECHOSDK_APP_ID')}=${chalk.cyan(selectedApp.id)}`,
+    );
+    printNextjsCommerceNextSteps(selectedApp.id, envPath);
+    return;
+  }
+
+  // Default (vanilla Next.js / Vite) path
   const envPath = upsertEnvLocal(targetDir, selectedApp.id);
   if (envPath) {
     console.log(
@@ -107,6 +177,48 @@ async function promptCreateApp(): Promise<App> {
     console.error(chalk.red(`\n  ${(err as Error).message}\n`));
     process.exit(1);
   }
+}
+
+function printHydrogenNextSteps(appId: string, _envPath: string): void {
+  console.log(chalk.bold('\n  Next steps (Shopify Hydrogen)\n'));
+
+  console.log(`  ${chalk.dim('1.')} Install the adapter\n`);
+  console.log(`     ${chalk.cyan('npm install @echosdk/react @echosdk/shopify-hydrogen')}\n`);
+
+  console.log(`  ${chalk.dim('2.')} Add the provider in your Hydrogen root\n`);
+  console.log(
+    chalk.dim(`     import { EchoHydrogenProvider } from '@echosdk/shopify-hydrogen';`),
+  );
+  console.log(
+    chalk.dim(
+      `     <EchoHydrogenProvider appId={Env.ECHOSDK_APP_ID} cart={cart} customer={customer} />\n`,
+    ),
+  );
+
+  console.log(chalk.dim(`  Docs: https://echosdk.com/docs/hydrogen\n`));
+}
+
+function printNextjsCommerceNextSteps(appId: string, _envPath: string): void {
+  console.log(chalk.bold('\n  Next steps (Next.js Commerce)\n'));
+
+  console.log(`  ${chalk.dim('1.')} Install the adapter\n`);
+  console.log(
+    `     ${chalk.cyan('npm install @echosdk/react @echosdk/shopify-hydrogen')}\n`,
+  );
+
+  console.log(`  ${chalk.dim('2.')} Add the provider in your layout\n`);
+  console.log(
+    chalk.dim(
+      `     import { EchoNextjsProvider } from '@echosdk/shopify-hydrogen/nextjs';`,
+    ),
+  );
+  console.log(
+    chalk.dim(
+      `     <EchoNextjsProvider appId={process.env.NEXT_PUBLIC_ECHOSDK_APP_ID!} cart={cart} customer={customer} />\n`,
+    ),
+  );
+
+  console.log(chalk.dim(`  Docs: https://echosdk.com/docs/nextjs-commerce\n`));
 }
 
 function printNextSteps(appId: string, envWritten: boolean): void {

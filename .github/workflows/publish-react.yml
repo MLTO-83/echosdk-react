@@ -1,0 +1,44 @@
+name: Publish @echosdk/react
+
+on:
+  push:
+    tags:
+      - 'react@*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm --filter @echosdk/react run test
+
+      - name: Build
+        run: pnpm --filter @echosdk/react run build
+
+      - name: Check npm authentication
+        run: npm whoami
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ECHOSDK_GITHUB_ACTIONS }}
+
+      - name: Publish to npm
+        run: pnpm --filter @echosdk/react publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.ECHOSDK_GITHUB_ACTIONS }}

@@ -23,6 +23,8 @@ program
   .command('init')
   .description('Link or create a Chat App and generate echo.config.json')
   .option('-d, --dir <path>', 'project directory to initialize', '.')
+  .option('--hydrogen', 'Shopify Hydrogen project: detects hydrogen.config.ts and writes ECHOSDK_APP_ID to .env')
+  .option('--nextjs-commerce', 'Next.js Commerce project: detects next.config.js/ts and writes NEXT_PUBLIC_ECHOSDK_APP_ID to .env.local')
   .action(initCommand);
 
 program
