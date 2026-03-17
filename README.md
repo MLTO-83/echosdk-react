@@ -117,7 +117,7 @@ function App() {
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `appId` | `string` | **required** | Your EchoSDK application ID |
-| `apiUrl` | `string` | `https://api.echosdk.com` | Custom API endpoint |
+| `apiUrl` | `string` | `https://echosdk.com` | Custom API endpoint |
 | `theme` | `'light' \| 'dark' \| 'auto'` | `'auto'` | Color theme |
 | `position` | `'bottom-right' \| 'bottom-left' \| 'top-right' \| 'top-left'` | `'bottom-right'` | Chat bubble position |
 | `primaryColor` | `string` | `#3B82F6` | Primary brand color |

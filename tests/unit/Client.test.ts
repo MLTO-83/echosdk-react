@@ -16,7 +16,7 @@ describe('EchoSDKClient', () => {
     it('uses default API URL when no config provided', () => {
         const client = new EchoSDKClient({ appId: 'test-app' });
         // @ts-ignore - accessing private property for testing
-        expect(client.apiUrl).toBe('https://api.echosdk.com');
+        expect(client.apiUrl).toBe('https://echosdk.com');
     });
 
     it('uses provided apiUrl from config', () => {
@@ -65,7 +65,7 @@ describe('EchoSDKClient', () => {
             await client.query('hello');
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.echosdk.com/api/query',
+                'https://echosdk.com/api/query',
                 expect.objectContaining({
                     method: 'POST',
                     headers: expect.objectContaining({
@@ -83,7 +83,7 @@ describe('EchoSDKClient', () => {
             await client.sendFeedback('msg-1', true);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.echosdk.com/api/feedback',
+                'https://echosdk.com/api/feedback',
                 expect.objectContaining({
                     body: expect.stringContaining('"messageId":"msg-1"')
                 })
@@ -96,7 +96,7 @@ describe('EchoSDKClient', () => {
             await client.requestHumanHandover('conv-1');
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://api.echosdk.com/api/handover',
+                'https://echosdk.com/api/handover',
                 expect.objectContaining({
                     body: expect.stringContaining('"conversationId":"conv-1"')
                 })

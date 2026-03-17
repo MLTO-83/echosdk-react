@@ -1,7 +1,7 @@
 import { loadCredentials } from './auth.js';
 
 const API_BASE =
-  process.env.ECHOSDK_API_URL ?? 'https://api.echosdk.com';
+  process.env.ECHOSDK_API_URL ?? 'https://echosdk.com';
 
 const CLIENT_ID =
   process.env.ECHOSDK_CLIENT_ID ?? 'echosdk-cli';
