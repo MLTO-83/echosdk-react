@@ -9,6 +9,7 @@ import '../styles/default.css';
 
 export function EchoChat({
     appId,
+    apiKey,
     apiUrl,
     baseUrl,
     theme = 'auto',
@@ -27,7 +28,7 @@ export function EchoChat({
     const containerRef = useRef<HTMLDivElement>(null);
 
     // Initialize chat state
-    const [state, actions] = useChat(appId, baseUrl || apiUrl, {
+    const [state, actions] = useChat(appId, baseUrl || apiUrl, apiKey, {
         userName,
         userEmail,
         metadata,

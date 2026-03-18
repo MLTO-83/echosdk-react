@@ -63,6 +63,7 @@ export interface ApiError {
 // Component Props
 export interface EchoChatProps {
     appId: string;
+    apiKey?: string;
     apiUrl?: string;
     baseUrl?: string;
     theme?: 'light' | 'dark' | 'auto';

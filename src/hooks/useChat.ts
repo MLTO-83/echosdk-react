@@ -13,6 +13,7 @@ import { logger } from '../utils/logger';
 export function useChat(
     appId: string,
     apiUrl?: string,
+    apiKey?: string,
     context?: Context
 ): [ChatState, ChatActions] {
     const [messages, setMessages] = useState<Message[]>([]);
@@ -25,7 +26,7 @@ export function useChat(
 
     // Initialize client
     useEffect(() => {
-        clientRef.current = new EchoSDKClient({ appId, apiUrl });
+        clientRef.current = new EchoSDKClient({ appId, apiUrl, apiKey });
 
         // Load persisted conversation
         const stored = loadConversation();
@@ -33,7 +34,7 @@ export function useChat(
             setMessages(stored.messages);
             setConversationId(stored.conversationId);
         }
-    }, [appId, apiUrl]);
+    }, [appId, apiUrl, apiKey]);
 
     // Persist conversation on changes
     useEffect(() => {
