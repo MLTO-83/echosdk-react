@@ -102,7 +102,14 @@ export class EchoSDKClient {
                 throw error;
             }
 
-            // Retry on network errors or 5xx errors
+            // Don't retry network errors (API completely unreachable)
+            if (error instanceof TypeError && (error.message === 'Failed to fetch' || error.message === 'NetworkError when attempting to fetch resource.')) {
+                const networkError = new Error('Unable to connect to the support server. Please check your internet connection and try again.');
+                logger.error(`Network error on ${endpoint}: API is unreachable`);
+                throw networkError;
+            }
+
+            // Retry on 5xx server errors
             if (attempt < this.retryAttempts) {
                 logger.warn(`Request to ${endpoint} failed (attempt ${attempt}/${this.retryAttempts}), retrying…`);
                 await this.delay(this.retryDelay * attempt);

@@ -94,10 +94,10 @@ export function useChat(
     const toggleChat = useCallback(() => {
         setIsOpen((prev) => {
             const newState = !prev;
-            trackEvent(newState ? 'chat_opened' : 'chat_closed');
+            trackEvent(newState ? 'chat_opened' : 'chat_closed', { appId });
             return newState;
         });
-    }, []);
+    }, [appId]);
 
     const clearHistory = useCallback(() => {
         setMessages([]);
