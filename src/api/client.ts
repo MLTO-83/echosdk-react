@@ -75,7 +75,8 @@ export class EchoSDKClient {
         attempt = 1
     ): Promise<T> {
         try {
-            const response = await fetch(`${this.apiUrl}${endpoint}`, options);
+            const url = `${this.apiUrl}/api/${this.appId}${endpoint.replace(/^\/api/, '')}`;
+            const response = await fetch(url, options);
 
             if (!response.ok) {
                 const error: ApiError = await response.json().catch(() => ({
