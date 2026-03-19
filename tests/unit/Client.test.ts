@@ -65,7 +65,7 @@ describe('EchoSDKClient', () => {
             await client.query('hello');
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://echosdk.com/api/query',
+                'https://echosdk.com/api/test-app/query',
                 expect.objectContaining({
                     method: 'POST',
                     headers: expect.objectContaining({
@@ -83,7 +83,7 @@ describe('EchoSDKClient', () => {
             await client.sendFeedback('msg-1', true);
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://echosdk.com/api/feedback',
+                'https://echosdk.com/api/test-app/feedback',
                 expect.objectContaining({
                     body: expect.stringContaining('"messageId":"msg-1"')
                 })
@@ -96,7 +96,7 @@ describe('EchoSDKClient', () => {
             await client.requestHumanHandover('conv-1');
 
             expect(mockFetch).toHaveBeenCalledWith(
-                'https://echosdk.com/api/handover',
+                'https://echosdk.com/api/test-app/handover',
                 expect.objectContaining({
                     body: expect.stringContaining('"conversationId":"conv-1"')
                 })
