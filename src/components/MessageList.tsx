@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import type { Message } from '../types';
 import { TypingIndicator } from './TypingIndicator';
+import { renderMarkdown } from '../utils/markdown';
 
 interface MessageListProps {
     messages: Message[];
@@ -42,7 +43,16 @@ export function MessageList({ messages, isLoading = false }: MessageListProps) {
             {messages.map((message) => (
                 <div key={message.id} className={`echo-message ${message.sender}`}>
                     <div className="echo-message-content">
-                        {message.text}
+                        {message.sender === 'user' ? (
+                            message.text
+                        ) : (
+                            <div
+                                className="echo-markdown"
+                                dangerouslySetInnerHTML={{
+                                    __html: renderMarkdown(message.text),
+                                }}
+                            />
+                        )}
                         <div className="echo-message-timestamp">
                             {formatTimestamp(message.timestamp)}
                         </div>
