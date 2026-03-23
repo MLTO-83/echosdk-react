@@ -388,133 +388,19 @@
     text-decoration: underline;
 }
 
-/* Handover Button */
-.echo-handover-button {
-    display: flex;
-    align-items: center;
-    gap: 4px;
+/* Handover Link */
+.echo-handover-link {
+    display: inline-block;
     margin-top: var(--echo-spacing-xs);
-    padding: 4px 8px;
-    background: none;
-    border: 1px solid var(--echo-border);
-    border-radius: var(--echo-border-radius-sm);
-    color: var(--echo-text-secondary);
+    color: var(--echo-text-tertiary);
     font-size: var(--echo-font-size-xs);
+    text-decoration: underline;
     cursor: pointer;
-    transition: color var(--echo-transition), border-color var(--echo-transition);
+    transition: color var(--echo-transition);
 }
 
-.echo-handover-button:hover {
+.echo-handover-link:hover {
     color: var(--echo-primary-color);
-    border-color: var(--echo-primary-color);
-}
-
-/* Handover Overlay */
-.echo-handover-overlay {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
-    border-radius: inherit;
-}
-
-/* Handover Modal */
-.echo-handover-modal {
-    background-color: var(--echo-background);
-    border-radius: var(--echo-border-radius);
-    padding: var(--echo-spacing-lg);
-    margin: var(--echo-spacing-md);
-    max-width: 320px;
-    width: 100%;
-    box-shadow: var(--echo-shadow-lg);
-}
-
-.echo-handover-modal-title {
-    font-size: var(--echo-font-size-lg);
-    font-weight: 600;
-    color: var(--echo-text-primary);
-    margin-bottom: var(--echo-spacing-xs);
-}
-
-.echo-handover-modal-subtitle {
-    font-size: var(--echo-font-size-sm);
-    color: var(--echo-text-secondary);
-    margin-bottom: var(--echo-spacing-md);
-}
-
-.echo-handover-email-input {
-    width: 100%;
-    padding: var(--echo-spacing-sm) var(--echo-spacing-md);
-    border: 1px solid var(--echo-border);
-    border-radius: var(--echo-border-radius-sm);
-    background-color: var(--echo-surface);
-    color: var(--echo-text-primary);
-    font-family: var(--echo-font-family);
-    font-size: var(--echo-font-size-md);
-    margin-bottom: var(--echo-spacing-md);
-}
-
-.echo-handover-email-input:focus {
-    outline: none;
-    border-color: var(--echo-primary-color);
-}
-
-.echo-handover-modal-actions {
-    display: flex;
-    gap: var(--echo-spacing-sm);
-    justify-content: flex-end;
-}
-
-.echo-handover-cancel-button {
-    padding: var(--echo-spacing-sm) var(--echo-spacing-md);
-    background: none;
-    border: 1px solid var(--echo-border);
-    border-radius: var(--echo-border-radius-sm);
-    color: var(--echo-text-secondary);
-    cursor: pointer;
-    font-size: var(--echo-font-size-sm);
-    transition: color var(--echo-transition), border-color var(--echo-transition);
-}
-
-.echo-handover-cancel-button:hover {
-    color: var(--echo-text-primary);
-    border-color: var(--echo-text-primary);
-}
-
-.echo-handover-submit-button {
-    padding: var(--echo-spacing-sm) var(--echo-spacing-md);
-    background-color: var(--echo-primary-color);
-    color: white;
-    border: none;
-    border-radius: var(--echo-border-radius-sm);
-    cursor: pointer;
-    font-size: var(--echo-font-size-sm);
-    font-weight: 500;
-    transition: background-color var(--echo-transition);
-}
-
-.echo-handover-submit-button:hover:not(:disabled) {
-    background-color: var(--echo-primary-hover);
-}
-
-.echo-handover-submit-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.echo-handover-success-icon {
-    width: 48px;
-    height: 48px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, var(--echo-primary-color), #10b981);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: var(--echo-spacing-md);
 }
 
 /* Mobile Responsive */

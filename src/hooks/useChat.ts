@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { EchoSDKClient } from '../api/client';
-import type { Message, ChatState, ChatActions, Context, HandoverPayload } from '../types';
+import type { Message, ChatState, ChatActions, Context, HandoverPayload, Source } from '../types';
 import {
     saveConversation,
     loadConversation,
@@ -21,8 +21,13 @@ export function useChat(
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<Error | null>(null);
     const [conversationId, setConversationId] = useState<string | null>(null);
+    const [handoverPending, setHandoverPending] = useState(false);
 
     const clientRef = useRef<EchoSDKClient>();
+    const handoverContextRef = useRef<{
+        question: string;
+        sources: string[];
+    } | null>(null);
 
     // Initialize client
     useEffect(() => {
@@ -50,6 +55,70 @@ export function useChat(
     const sendMessage = useCallback(
         async (text: string) => {
             if (!clientRef.current) return;
+
+            // If handover is pending, treat input as email submission
+            if (handoverPending && handoverContextRef.current) {
+                const email = text.trim();
+
+                // Basic email validation
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    const errorMsg: Message = {
+                        id: `msg_${Date.now()}_system`,
+                        text: 'That doesn\'t look like a valid email address. Please try again.',
+                        sender: 'system',
+                        timestamp: Date.now(),
+                    };
+                    setMessages((prev) => [...prev, errorMsg]);
+                    return;
+                }
+
+                // Show the email as a user message
+                const userMsg: Message = {
+                    id: `msg_${Date.now()}_user`,
+                    text: email,
+                    sender: 'user',
+                    timestamp: Date.now(),
+                };
+                setMessages((prev) => [...prev, userMsg]);
+                setIsLoading(true);
+
+                try {
+                    const payload: HandoverPayload = {
+                        appId,
+                        email,
+                        question: handoverContextRef.current.question,
+                        history: messages,
+                        meta: handoverContextRef.current.sources,
+                        url: typeof window !== 'undefined' ? window.location.href : '',
+                    };
+
+                    await clientRef.current.requestHandoverWithContext(payload);
+
+                    const successMsg: Message = {
+                        id: `msg_${Date.now()}_system`,
+                        text: 'Request sent! A support agent has been notified and will reach out to you shortly via email.',
+                        sender: 'system',
+                        timestamp: Date.now(),
+                    };
+                    setMessages((prev) => [...prev, successMsg]);
+                } catch (err) {
+                    const error = err instanceof Error ? err : new Error('Unknown error');
+                    logger.error('Handover request failed:', error.message);
+                    const errorMsg: Message = {
+                        id: `msg_${Date.now()}_system`,
+                        text: 'Failed to send your request. Please try again.',
+                        sender: 'system',
+                        timestamp: Date.now(),
+                    };
+                    setMessages((prev) => [...prev, errorMsg]);
+                } finally {
+                    setIsLoading(false);
+                    setHandoverPending(false);
+                    handoverContextRef.current = null;
+                }
+                return;
+            }
+
             if (!validateMessage(text)) {
                 setError(new Error('Invalid message'));
                 return;
@@ -89,7 +158,7 @@ export function useChat(
                 setIsLoading(false);
             }
         },
-        [conversationId, context]
+        [conversationId, context, handoverPending, messages, appId]
     );
 
     const toggleChat = useCallback(() => {
@@ -103,6 +172,8 @@ export function useChat(
     const clearHistory = useCallback(() => {
         setMessages([]);
         setConversationId(null);
+        setHandoverPending(false);
+        handoverContextRef.current = null;
         clearConversation();
     }, []);
 
@@ -149,12 +220,52 @@ export function useChat(
         [appId]
     );
 
+    const startHandover = useCallback((message: Message) => {
+        // Build question context from the AI message and any preceding user message
+        const msgIndex = messages.findIndex((m) => m.id === message.id);
+        const precedingUserMsg = messages
+            .slice(0, msgIndex)
+            .reverse()
+            .find((m) => m.sender === 'user');
+
+        const question = precedingUserMsg
+            ? `User: ${precedingUserMsg.text}\nAssistant: ${message.text}`
+            : message.text;
+
+        // Extract sources from message metadata if available
+        const sources: string[] = [];
+        if (message.metadata?.sources) {
+            const rawSources = message.metadata.sources as Source[];
+            for (const s of rawSources) {
+                if (s.url) sources.push(s.url);
+            }
+        }
+
+        handoverContextRef.current = { question, sources };
+        setHandoverPending(true);
+
+        // Add a prompt message styled as AI
+        const promptMsg: Message = {
+            id: `msg_${Date.now()}_system`,
+            text: 'I\'ll connect you with a human agent. Please enter your email address below so our support team can get back to you.',
+            sender: 'system',
+            timestamp: Date.now(),
+        };
+        setMessages((prev) => [...prev, promptMsg]);
+    }, [messages]);
+
+    const cancelHandover = useCallback(() => {
+        setHandoverPending(false);
+        handoverContextRef.current = null;
+    }, []);
+
     const state: ChatState = {
         messages,
         isOpen,
         isLoading,
         error,
         conversationId,
+        handoverPending,
     };
 
     const actions: ChatActions = {
@@ -163,6 +274,8 @@ export function useChat(
         clearHistory,
         requestHumanHelp,
         requestHandover,
+        startHandover,
+        cancelHandover,
     };
 
     return [state, actions];

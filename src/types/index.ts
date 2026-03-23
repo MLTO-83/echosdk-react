@@ -88,6 +88,7 @@ export interface ChatState {
     isLoading: boolean;
     error: Error | null;
     conversationId: string | null;
+    handoverPending: boolean;
 }
 
 export interface HandoverPayload {
@@ -105,4 +106,6 @@ export interface ChatActions {
     clearHistory: () => void;
     requestHumanHelp: () => Promise<void>;
     requestHandover: (payload: Omit<HandoverPayload, 'appId'>) => Promise<void>;
+    startHandover: (message: Message) => void;
+    cancelHandover: () => void;
 }
