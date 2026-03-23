@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { EchoSDKClient } from '../api/client';
-import type { Message, ChatState, ChatActions, Context } from '../types';
+import type { Message, ChatState, ChatActions, Context, HandoverPayload } from '../types';
 import {
     saveConversation,
     loadConversation,
@@ -126,6 +126,29 @@ export function useChat(
         }
     }, [conversationId]);
 
+    const requestHandover = useCallback(
+        async (payload: Omit<HandoverPayload, 'appId'>) => {
+            if (!clientRef.current) return;
+
+            const fullPayload: HandoverPayload = {
+                appId,
+                ...payload,
+            };
+
+            await clientRef.current.requestHandoverWithContext(fullPayload);
+
+            const systemMessage: Message = {
+                id: `msg_${Date.now()}_system`,
+                text: 'A human agent will join the conversation shortly.',
+                sender: 'system',
+                timestamp: Date.now(),
+            };
+
+            setMessages((prev) => [...prev, systemMessage]);
+        },
+        [appId]
+    );
+
     const state: ChatState = {
         messages,
         isOpen,
@@ -139,6 +162,7 @@ export function useChat(
         toggleChat,
         clearHistory,
         requestHumanHelp,
+        requestHandover,
     };
 
     return [state, actions];

@@ -90,9 +90,19 @@ export interface ChatState {
     conversationId: string | null;
 }
 
+export interface HandoverPayload {
+    appId: string;
+    email: string;
+    question: string;
+    history: Message[];
+    meta: string[];
+    url: string;
+}
+
 export interface ChatActions {
     sendMessage: (text: string) => Promise<void>;
     toggleChat: () => void;
     clearHistory: () => void;
     requestHumanHelp: () => Promise<void>;
+    requestHandover: (payload: Omit<HandoverPayload, 'appId'>) => Promise<void>;
 }

@@ -3,6 +3,7 @@ import type {
     QueryResponse,
     Context,
     ApiError,
+    HandoverPayload,
 } from '../types';
 import { logger } from '../utils/logger';
 
@@ -54,6 +55,14 @@ export class EchoSDKClient {
                 appId: this.appId,
                 conversationId,
             }),
+        });
+    }
+
+    async requestHandoverWithContext(payload: HandoverPayload): Promise<void> {
+        await this.fetchWithRetry('/api/handover', {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(payload),
         });
     }
 
